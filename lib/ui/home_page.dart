@@ -10,45 +10,70 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final List<String> entries = <String>[
+    'shopping',
+    'go home',
+    'work',
+    'shopping',
+    'go home',
+    'work'
+  ];
+  final List<int> colorCodes = <int>[600, 500, 100];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: new SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(8),
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.all(10.0),
-              color: Colors.amber,
-              width: 48.0,
-              height: 48.0,
+        child: Stack(children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Container(
+              height: 150,
+              width: MediaQuery.of(context).size.width,
+              decoration: new BoxDecoration(
+                  image: DecorationImage(
+                      image: new AssetImage('assets/planning.jpg'),
+                      fit: BoxFit.fitHeight)),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 50,
-                color: Colors.amber[600],
-                child: const Center(child: Text('Day 1')),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 50,
-                color: Colors.amber[500],
-                child: const Center(child: Text('Day 2')),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 50,
-                color: Colors.amber[100],
-                child: const Center(child: Text('Day 3')),
-              ),
-            ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 158, left: 8, right: 8),
+            child: ListView.builder(
+                itemCount: entries.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Container(
+                      height: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: new BorderRadius.circular(10),
+                        color: Colors.black12,
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Container(
+                              width: 65,
+                              height: 70,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image:
+                                          new AssetImage('assets/planning.jpg'),
+                                      fit: BoxFit.cover)),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 25),
+                            child: Center(child: Text('${entries[index]}')),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+          ),
+        ]),
       ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
@@ -56,6 +81,35 @@ class _HomePageState extends State<HomePage> {
           height: 50.0,
         ),
       ),
+      floatingActionButton: new FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          _addNewToday(context);
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+}
+
+Widget _header() {
+  return Container(
+    decoration: BoxDecoration(),
+  );
+}
+
+void _addNewToday(BuildContext context) {
+  showModalBottomSheet(
+      context: context,
+      builder: (builder) {
+        return new Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height / 2,
+          decoration: new BoxDecoration(
+              color: Colors.white,
+              borderRadius: new BorderRadius.only(
+                  topLeft: const Radius.circular(10.0),
+                  topRight: const Radius.circular(10.0))),
+        );
+      });
 }
