@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class HomePage extends StatefulWidget {
+import 'add_myday.dart';
+
+class HomePage extends StatelessWidget {
   HomePage({Key key, this.title}) : super(key: key);
 
   final String title;
   @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   final List<String> entries = <String>[
     'shopping',
     'go home',
@@ -18,6 +16,7 @@ class _HomePageState extends State<HomePage> {
     'go home',
     'work'
   ];
+
   final List<int> colorCodes = <int>[600, 500, 100];
   @override
   Widget build(BuildContext context) {
@@ -84,7 +83,8 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: new FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          _addNewToday(context);
+          Navigator.of(context).push(_createRoute());
+          ;
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -92,24 +92,20 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget _header() {
-  return Container(
-    decoration: BoxDecoration(),
-  );
-}
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => AddMyday(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
 
-void _addNewToday(BuildContext context) {
-  showModalBottomSheet(
-      context: context,
-      builder: (builder) {
-        return new Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 2,
-          decoration: new BoxDecoration(
-              color: Colors.white,
-              borderRadius: new BorderRadius.only(
-                  topLeft: const Radius.circular(10.0),
-                  topRight: const Radius.circular(10.0))),
-        );
-      });
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }
