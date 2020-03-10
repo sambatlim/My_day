@@ -11,14 +11,14 @@ class DiaryModel {
       id: data['id'],
       description: data['description'],
       feeling: data['feeling'],
-      image: data['image'],
+      image: data['picture'],
       place: data['place']);
 
   Map<String, dynamic> toDatabaseJson() => {
         "id": this.id,
         "description": this.description,
         "feeling": this.feeling,
-        "image": this.image,
+        "picture": this.image,
         "place": this.place,
       };
 }

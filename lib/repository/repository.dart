@@ -6,7 +6,7 @@ class DatabaseRepository {
 
   Future getAllDiary({String query}) => diaryDao.getDiary(query: query);
 
-  Future insertDiary(DiaryModel diary) => diaryDao.updateDiary(diary);
+  Future insertDiary(DiaryModel diary) => diaryDao.createTodo(diary);
 
   Future updateTodo(DiaryModel diary) => diaryDao.updateDiary(diary);
 

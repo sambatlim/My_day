@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_day/bloc/bloc.dart';
+import 'package:my_day/model/model.dart';
+import 'package:my_day/ui/home_page.dart';
 
 class AddMyday extends StatefulWidget {
   @override
@@ -13,6 +16,9 @@ class _AddMydayState extends State<AddMyday> {
   List<String> _allStatus = ['sad', 'normal', 'happy'];
   int _value = 1;
   File _image;
+  var _place = new TextEditingController();
+  var _description = new TextEditingController();
+  final DiaryBloc diaryBloc = new DiaryBloc();
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -69,6 +75,7 @@ class _AddMydayState extends State<AddMyday> {
                   Padding(
                     padding: const EdgeInsets.only(right: 8, left: 8, top: 20),
                     child: TextFormField(
+                      controller: _place,
                       decoration: const InputDecoration(
                         icon: Icon(Icons.place),
                         hintText: 'Where did it happen?',
@@ -79,6 +86,7 @@ class _AddMydayState extends State<AddMyday> {
                   Padding(
                     padding: const EdgeInsets.only(right: 8, left: 8, top: 20),
                     child: TextFormField(
+                      controller: _description,
                       maxLines: 4,
                       decoration: const InputDecoration(
                         icon: Icon(Icons.info),
@@ -100,7 +108,7 @@ class _AddMydayState extends State<AddMyday> {
                         'Save',
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: null,
+                      onPressed: _updateToDatabase,
                     ),
                   ),
                 ],
@@ -110,5 +118,23 @@ class _AddMydayState extends State<AddMyday> {
         ),
       ),
     );
+  }
+
+  void _updateToDatabase() {
+    if (_image != null) {
+      List<int> imageBytes = _image.readAsBytesSync();
+      String base64Image = base64Encode(imageBytes);
+      print(base64Image);
+      String _feeling;
+      _value == null ? _feeling = 'no status' : _feeling = _allStatus[_value];
+      final myDayModel = DiaryModel(
+          description: _description.text,
+          place: _place.text,
+          feeling: _feeling,
+          image: 'picture');
+      diaryBloc.addDiary(myDayModel);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
+    }
   }
 }

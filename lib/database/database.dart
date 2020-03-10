@@ -30,12 +30,12 @@ class DatabaseProvider {
   }
 
   void initDB(Database database, int version) async {
-    await database.execute("CREATE TABLE $diaryTable("
+    await database.execute("CREATE TABLE $diaryTable ("
         "id INTERGER PRIMARY KEY,"
         "description text,"
         "feeling text,"
         "picture text,"
-        "place text,"
+        "place text"
         ")");
   }
 }
